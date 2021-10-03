@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weng.ticket.mapper.TicketMapper">
+  <resultMap id="BaseResultMap" type="com.weng.ticket.entity.Ticket">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ticket_from" jdbcType="VARCHAR" property="ticketFrom" />
+    <result column="ticket_to" jdbcType="VARCHAR" property="ticketTo" />
+    <result column="ticket_payer" jdbcType="VARCHAR" property="ticketPayer" />
+    <result column="ticket_count" jdbcType="TINYINT" property="ticketCount" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="buy_time" jdbcType="TIMESTAMP" property="buyTime" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+    <result column="ticket_status" jdbcType="TINYINT" property="ticketStatus" />
+    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, ticket_from, ticket_to, ticket_payer, ticket_count, start_time, end_time, buy_time, 
+    pay_time, ticket_status, is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_ticket
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findTicketList" resultType="com.weng.ticket.entity.Ticket">
+    select
+    <include refid="Base_Column_List" />
+    from tb_ticket
+    where is_deleted=0
+    <if test="keyword!=null">
+      AND (ticket_from like CONCAT('%',#{keyword},'%' ) or ticket_to like CONCAT('%',#{keyword},'%' ))
+    </if>
+    <if test="ticketStatus!=null">
+      AND ticket_status = #{ticketStatus}
+    </if>
+    order by id desc
+    <if test="start!=null and limit!=null">
+      limit #{start},#{limit}
+    </if>
+  </select>
+
+  <select id="getTotalTickets" resultType="java.lang.Integer">
+    select count(*) from tb_ticket
+    where is_deleted = 0
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_ticket
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.weng.ticket.entity.Ticket">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tb_ticket (ticket_from, ticket_to, ticket_payer, 
+      ticket_count, start_time, end_time, 
+      buy_time, pay_time, ticket_status, 
+      is_deleted)
+    values (#{ticketFrom,jdbcType=VARCHAR}, #{ticketTo,jdbcType=VARCHAR}, #{ticketPayer,jdbcType=VARCHAR}, 
+      #{ticketCount,jdbcType=TINYINT}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{buyTime,jdbcType=TIMESTAMP}, #{payTime,jdbcType=TIMESTAMP}, #{ticketStatus,jdbcType=TINYINT}, 
+      #{isDeleted,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.weng.ticket.entity.Ticket">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tb_ticket
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ticketFrom != null">
+        ticket_from,
+      </if>
+      <if test="ticketTo != null">
+        ticket_to,
+      </if>
+      <if test="ticketPayer != null">
+        ticket_payer,
+      </if>
+      <if test="ticketCount != null">
+        ticket_count,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="buyTime != null">
+        buy_time,
+      </if>
+      <if test="payTime != null">
+        pay_time,
+      </if>
+      <if test="ticketStatus != null">
+        ticket_status,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ticketFrom != null">
+        #{ticketFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketTo != null">
+        #{ticketTo,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketPayer != null">
+        #{ticketPayer,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketCount != null">
+        #{ticketCount,jdbcType=TINYINT},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyTime != null">
+        #{buyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null">
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ticketStatus != null">
+        #{ticketStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.weng.ticket.entity.Ticket">
+    update tb_ticket
+    <set>
+      <if test="ticketFrom != null">
+        ticket_from = #{ticketFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketTo != null">
+        ticket_to = #{ticketTo,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketPayer != null">
+        ticket_payer = #{ticketPayer,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketCount != null">
+        ticket_count = #{ticketCount,jdbcType=TINYINT},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyTime != null">
+        buy_time = #{buyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTime != null">
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ticketStatus != null">
+        ticket_status = #{ticketStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.weng.ticket.entity.Ticket">
+    update tb_ticket
+    set ticket_from = #{ticketFrom,jdbcType=VARCHAR},
+      ticket_to = #{ticketTo,jdbcType=VARCHAR},
+      ticket_payer = #{ticketPayer,jdbcType=VARCHAR},
+      ticket_count = #{ticketCount,jdbcType=TINYINT},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      buy_time = #{buyTime,jdbcType=TIMESTAMP},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      ticket_status = #{ticketStatus,jdbcType=TINYINT},
+      is_deleted = #{isDeleted,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
