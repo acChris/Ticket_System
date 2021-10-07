@@ -15,6 +15,7 @@
 *.iws
 *.iml
 *.ipr
+Ticket-System.iml
 
 ### NetBeans ###
 /nbproject/private/
