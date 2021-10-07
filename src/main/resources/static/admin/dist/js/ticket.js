@@ -119,7 +119,7 @@ $('#saveButton').click(function () {
         var url = '/admin/ticket/save';
         var id = getSelectedRowWithoutAlert();
         if (id != null) {
-            url = '/admin/ticket/update';
+            url = '/admin/ticket/edit/' + ticketId;
         }
         console.log(params);
         $.ajax({
@@ -156,13 +156,27 @@ $('#saveButton').click(function () {
 
 function ticketEdit() {
     // reset();
-    var id = getSelectedRow();
-    if (id == null) {
+    var ticketId =      getSelectedRows();
+
+    if (ticketId == null) {
         return;
     }
     $('.modal-title').html('用户购票编辑');
     $('#ticketModal').modal('show');
-    $("#ticketId").val(id);
+
+
+    $.get("/admin/ticket/edit/" + ticketId, function (r) {
+        if (r.resultCode == 200 && r.data != null) {
+            //填充数据至modal
+            $("#ticketId").val(r.data.id);
+            $("#ticketFrom").val(r.data.ticketFrom);
+            $("#ticketTo").val(r.data.ticketTo);
+            $("#ticketPayer").val(r.data.ticketPayer);
+            $("#ticketCount").val(r.data.ticketFrom.ticketCount);
+            $("#startTime").val(r.data.ticketFrom.startTime);
+            $("#endTime").val(r.data.ticketFrom.endTime);
+        }
+    });
 }
 
 function ticketDelete() {

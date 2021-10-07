@@ -44,6 +44,16 @@ public class Ticket implements Serializable {
         this.ticketStatus = ticketStatus;
     }
     
+    public Ticket(Integer ticketId, String ticketFrom, String ticketTo, String ticketPayer, Byte ticketCount, Date sTime, Date eTime) {
+        this.id = ticketId;
+        this.ticketFrom = ticketFrom;
+        this.ticketTo = ticketTo;
+        this.ticketPayer = ticketPayer;
+        this.ticketCount = ticketCount;
+        this.startTime = sTime;
+        this.endTime = eTime;
+    }
+    
     
     public Integer getId() {
         return id;

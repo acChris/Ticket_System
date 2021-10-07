@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
+
 /**
  * @Author: acChris
  * @Date: 2021/10/3 0:01
@@ -62,6 +63,39 @@ public class TicketController {
             return ResultGenerator.genSuccessResult("添加成功!");
         }else{
             return ResultGenerator.genFailResult(saveTicketResult);
+        }
+    }
+    
+    @GetMapping("/edit/{ticketId}")
+    @ResponseBody
+    public Result editRentTicketId(@PathVariable("ticketId") Integer ticketId){
+        Ticket ticket = ticketService.selectByPrimaryKey(ticketId);
+        return ResultGenerator.genSuccessResult(ticket);
+    }
+    
+    @PostMapping("/edit/{ticketId}")
+    @ResponseBody
+    public Result edit(@PathVariable("ticketId")        Integer ticketId,
+                       @RequestParam("ticketFrom")      String  ticketFrom,
+                       @RequestParam("ticketTo")        String  ticketTo,
+                       @RequestParam("ticketPayer")     String  ticketPayer,
+                       @RequestParam("ticketCount")     Byte  ticketCount,
+                       @RequestParam("startTime")       String startTime,
+                       @RequestParam("endTime")         String endTime) throws ParseException {
+        // 将 Time 转为 Date 类型
+        Date sTime = DateUtil.StringToDate(startTime);
+        Date eTime = DateUtil.StringToDate(endTime);
+        
+        Ticket ticket = new Ticket(ticketId, ticketFrom, ticketTo, ticketPayer, ticketCount, sTime, eTime);
+
+//        System.out.println("经过edit方法。。。");
+//        System.out.println(rentTicket);
+        
+        Boolean saveTicketResult = ticketService.updateTicketById(ticket);
+        if (saveTicketResult) {
+            return ResultGenerator.genSuccessResult(ticket);
+        }else{
+            return ResultGenerator.genFailResult("修改余票失败，请重试！");
         }
     }
     

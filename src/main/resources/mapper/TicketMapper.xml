@@ -59,7 +59,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="deleteBatchByIds">
-    updaet tb_ticket
+    update tb_ticket
     set is_deleted = 1
     where id IN
     <foreach item="id" collection="array" open="(" separator="," close=")">

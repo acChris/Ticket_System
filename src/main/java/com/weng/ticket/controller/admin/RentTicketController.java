@@ -64,7 +64,7 @@ public class RentTicketController {
 
     @PostMapping("/save")
     @ResponseBody
-    public Result save(@RequestParam("id") Integer id,
+    public Result save(
                        @RequestParam("rentTicketFrom") String rentTicketFrom,
                        @RequestParam("rentTicketTo") String rentTicketTo,
                        @RequestParam("startTime") String startTime,
@@ -72,7 +72,7 @@ public class RentTicketController {
                        @RequestParam("rentTicketCount") Integer rentTicketCount) throws ParseException {
         Date sTime = DateUtil.StringToDate(startTime);
         Date eTime = DateUtil.StringToDate(endTime);
-        RentTicket rentTicket = new RentTicket(id, rentTicketFrom, rentTicketTo, sTime, eTime, rentTicketCount, null, null);
+        RentTicket rentTicket = new RentTicket(null, rentTicketFrom, rentTicketTo, sTime, eTime, rentTicketCount, null, null);
         String saveRentTicketResult = rentTicketService.saveRentTicket(rentTicket);
         if ("SUCCESS".equals(saveRentTicketResult)){
             return ResultGenerator.genSuccessResult("添加成功!");
@@ -81,6 +81,7 @@ public class RentTicketController {
         }
     }
 
+    
     @GetMapping("/edit/{rentTicketId}")
     @ResponseBody
     public Result editRentTicketId(@PathVariable("rentTicketId") Integer rentTicketId){
