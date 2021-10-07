@@ -2,6 +2,7 @@
 
 ## 文件目录图
 
+```
 Ticket_System_TEST
 ├─ README.md
 ├─ docs
@@ -14,7 +15,7 @@ Ticket_System_TEST
 │    └─ test
 │           └─ java
 └─ tree.md
-
+```
 
 ## 本售票系统应该具备如下功能： 
 
