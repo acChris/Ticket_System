@@ -1,4 +1,4 @@
-package com.weng.ticket;
+package com.weng.ticket.mapper;
 
 import com.weng.ticket.entity.Ticket;
 import com.weng.ticket.mapper.TicketMapper;

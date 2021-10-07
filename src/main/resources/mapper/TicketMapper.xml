@@ -25,13 +25,18 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="findTicketList" resultType="com.weng.ticket.entity.Ticket">
+  <select id="findTicketList" parameterType="Map" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from tb_ticket
     where is_deleted=0
     <if test="keyword!=null">
       AND (ticket_from like CONCAT('%',#{keyword},'%' ) or ticket_to like CONCAT('%',#{keyword},'%' ))
+    </if>
+    <if test="loginUserName!=null">
+      AND ticket_payer
+      IN (select login_user_name from tb_admin_user
+      where login_user_name = #{loginUserName})
     </if>
     <if test="ticketStatus!=null">
       AND ticket_status = #{ticketStatus}
@@ -47,10 +52,21 @@
     where is_deleted = 0
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tb_ticket
+<!--  逻辑删除 -->
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    update tb_ticket
+    set is_deleted = 1
     where id = #{id,jdbcType=INTEGER}
-  </delete>
+  </update>
+  <update id="deleteBatchByIds">
+    updaet tb_ticket
+    set is_deleted = 1
+    where id IN
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+
   <insert id="insert" parameterType="com.weng.ticket.entity.Ticket">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
@@ -134,6 +150,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.weng.ticket.entity.Ticket">
     update tb_ticket
     <set>

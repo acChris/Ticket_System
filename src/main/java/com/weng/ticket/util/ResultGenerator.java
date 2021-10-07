@@ -47,4 +47,8 @@ public class ResultGenerator {
         result.setMessage(message);
         return result;
     }
+
+    public static String genResult(Integer id){
+        return id > 0 ? DEFAULT_SUCCESS_MESSAGE : DEFAULT_FAIL_MESSAGE;
+    }
 }

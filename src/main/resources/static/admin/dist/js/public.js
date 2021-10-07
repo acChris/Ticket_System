@@ -1,4 +1,4 @@
-<!-- 正则验证 start-->
+// <!-- 正则验证 start-->
 /**
  * 判空
  *
@@ -81,13 +81,28 @@ function validCN_ENString2_18(str) {
 }
 
 /**
+ * 正则匹配2-20位的中文字符串
+ *
+ * @param str
+ * @returns {boolean}
+ */
+function validCNString2_100(str) {
+    var pattern =  /^[\u4e00-\u9fa5]{2,20}$/;
+    if (pattern.test(str.trim())) {
+        return (true);
+    } else {
+        return (false);
+    }
+}
+
+/**
  * 正则匹配2-100位的中英文字符串
  *
  * @param str
  * @returns {boolean}
  */
-function validCN_ENString2_100(str) {
-    var pattern = /^[a-zA-Z0-9-\u4E00-\u9FA5_,， ]{2,100}$/;
+ function validCN_ENString2_100(str) {
+    var pattern = \u4E00-\u9FA5;
     if (pattern.test(str.trim())) {
         return (true);
     } else {
@@ -110,7 +125,7 @@ function validPassword(password) {
     }
 }
 
-<!-- 正则验证 end-->
+// <!-- 正则验证 end-->
 
 /**
  * 获取jqGrid选中的一条记录

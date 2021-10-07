@@ -22,6 +22,7 @@
     <include refid="Base_Column_List" />
     from tb_admin_user
     where login_user_name = #{userName,jdbcType=VARCHAR} AND login_password=#{password,jdbcType=VARCHAR} AND locked = 0
+
   </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -38,7 +39,7 @@
   <insert id="insert" parameterType="com.weng.ticket.entity.AdminUser">
     insert into tb_admin_user (admin_user_id, login_user_name, login_password, 
       nick_name, locked)
-    values (#{adminUserId,jdbcType=INTEGER}, #{loginUserName,jdbcType=VARCHAR}, #{loginPassword,jdbcType=VARCHAR}, 
+    values (#{adminUserId,jdbcType=INTEGER}, #{loginUserName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
       #{nickName,jdbcType=VARCHAR}, #{locked,jdbcType=TINYINT})
   </insert>
   <insert id="insertAdminUser" parameterType="com.weng.ticket.entity.AdminUser">

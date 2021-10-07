@@ -1,4 +1,4 @@
-package com.weng.ticket;
+package com.weng.ticket.mapper;
 
 import com.weng.ticket.entity.RentTicket;
 import com.weng.ticket.mapper.RentTicketMapper;
@@ -26,8 +26,8 @@ public class RentTicketMapperTests {
         Date date = new Date();
 //        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        System.out.println(formatter.format(date));
-        RentTicket rentTicket = new RentTicket(null, "testFrom","testTo",date,null,100,null);
-        int save = rentTicketMapper.saveRentTicket(rentTicket);
+        RentTicket rentTicket = new RentTicket(null, "testFrom","testTo",date,null,100, (byte) 0,null);
+        int save = rentTicketMapper.insertSelective(rentTicket);
         if (save != 0){
             System.out.println("插入成功！");
         }else{

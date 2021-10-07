@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header th:replace="admin/common/header::header-fragment"></header>
+<header th:replace="admin/common/header::header-fragment">
+</header>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
     <!-- 引入页面头header-fragment -->
     <div th:replace="admin/common/header::header-nav"></div>
     <!-- 引入工具栏sidebar-fragment -->
-    <div th:replace="admin/common/sidebar::sidebar-fragment(${path})"></div>
-    <!-- Content Wrapper. Contains page content -->
+    <div th:replace="user/common/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains 图标content -->
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
+        <!-- Content Header (图标header) -->
         <div class="content-header">
             <div class="container-fluid">
             </div><!-- /.container-fluid -->
@@ -19,30 +20,28 @@
             <div class="container-fluid">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">用户管理</h3>
+                        <h3 class="card-title">购票信息</h3>
                     </div> <!-- /.card-body -->
                     <div class="card-body">
+                        <!-- 增删改查按钮栏 -->
                         <div class="grid-btn">
-                            <button class="btn btn-info" onclick="editUser()"><i
-                                    class="fa fa-edit"></i>&nbsp;修改
-                            </button>
-                            <button class="btn btn-danger" onclick="deleteUser()"><i
-                                    class="fa fa-trash-o"></i>&nbsp;删除
-                            </button>&nbsp;&nbsp;
                             <input type="text" placeholder="关键字(出发地 / 终点)" id="keyword" class="form-control col-2">&nbsp;
-                            <button class="btn btn-info" onclick="search()"><i
+                            <button class="btn btn-info" onclick="ticketSearch()"><i
                                     class="fa fa-search"></i>&nbsp;搜索
                             </button>
                         </div>
-                        <!-- JqGrid必要DOM,用于创建表格展示列表数据 -->
-                        <table id="jqGrid" class="table table-bordered"></table>
-                        <!-- JqGrid必要DOM,分页信息区域 -->
+
+                        <br>
+                        <table id="jqGrid" class="table table-bordered">
+                        </table>
                         <div id="jqGridPager"></div>
                     </div><!-- /.card-body -->
                 </div>
             </div><!-- /.container-fluid -->
         </div>
+        
         <!-- /.content -->
+
     </div>
     <!-- /.content-wrapper -->
     <!-- 引入页脚footer-fragment -->
@@ -54,9 +53,26 @@
 <script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
 <!-- Bootstrap 4 -->
 <script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/admin/plugins/ajaxupload/ajaxupload.js}"></script>
+<!-- Bootstrap 日期 -->
+<link th:href="@{/admin/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.min.js}"></script>
+<!-- <script th:src="@{moment.js}"></script> -->
+<!-- <script th:src="@{tempusdominus-bootstrap-4.min.js}"></script> -->
+
 <!-- AdminLTE App -->
 <script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
-<script th:src="@{/admin/dist/js/test.js}"></script>
+<!-- jqgrid -->
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/grid.locale-cn.js}"></script>
+<!-- image-picker -->
+<!-- <script th:src="@{/admin/plugins/image-picker/query.masonry.min.js}"></script>
+<script th:src="@{/admin/plugins/image-picker/image-picker.min.js}"></script> -->
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+<script th:src="@{/admin/dist/js/user/ticket.js}"></script>
+
+
+
 </body>
 </html>

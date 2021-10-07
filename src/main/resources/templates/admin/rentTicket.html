@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header th:replace="admin/common/header::header-fragment">
-</header>
+<header th:replace="admin/common/header::header-fragment"></header>
 <body class="hold-transition sidebar-mini">
+
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+    }
+</style>
+
 <div class="wrapper">
     <!-- 引入页面头header-fragment -->
     <div th:replace="admin/common/header::header-nav"></div>
     <!-- 引入工具栏sidebar-fragment -->
     <div th:replace="admin/common/sidebar::sidebar-fragment(${path})"></div>
-    <!-- Content Wrapper. Contains 图标content -->
+    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <!-- Content Header (图标header) -->
+        <!-- Content Header (Page header) -->
         <div class="content-header">
             <div class="container-fluid">
             </div><!-- /.container-fluid -->
@@ -20,39 +29,37 @@
             <div class="container-fluid">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">用户购票管理</h3>
+                        <h3 class="card-title">火车余票管理</h3>
                     </div> <!-- /.card-body -->
                     <div class="card-body">
-                        <!-- 增删改查按钮栏 -->
                         <div class="grid-btn">
-                            <button class="btn btn-success" onclick="ticketAdd()"><i
+                            <button class="btn btn-success" onclick="addTicket()"><i
                                     class="fa fa-plus"></i>&nbsp;新增
                             </button>
-                            <button class="btn btn-info" onclick="ticketEdit()"><i
+                            <button class="btn btn-info" onclick="editTicket()"><i
                                     class="fa fa-edit"></i>&nbsp;修改
                             </button>
-                            <button class="btn btn-danger" onclick="ticketDelete()"><i
+                            <button class="btn btn-danger" onclick="deleteTicket()"><i
                                     class="fa fa-trash-o"></i>&nbsp;删除
                             </button>&nbsp;&nbsp;
                             <input type="text" placeholder="关键字(出发地 / 终点)" id="keyword" class="form-control col-2">&nbsp;
-                            <button class="btn btn-info" onclick="ticketSearch()"><i
+                            <button class="btn btn-info" onclick="search()"><i
                                     class="fa fa-search"></i>&nbsp;搜索
                             </button>
                         </div>
-
-                        <br>
-                        <table id="jqGrid" class="table table-bordered">
-                        </table>
+                        <!-- JqGrid必要DOM,用于创建表格展示列表数据 -->
+                        <table id="jqGrid" class="table table-bordered"></table>
+                        <!-- JqGrid必要DOM,分页信息区域 -->
                         <div id="jqGridPager"></div>
                     </div><!-- /.card-body -->
                 </div>
             </div><!-- /.container-fluid -->
         </div>
-        
         <!-- /.content -->
+
         <div class="content">
             <!-- 模态框（Modal） -->
-            <div class="modal fade" id="ticketModal" tabindex="-1" role="dialog" aria-labelledby="articleModalLabel">
+            <div class="modal fade" id="rentTicketModal" tabindex="-1" role="dialog" aria-labelledby="articleModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -68,37 +75,30 @@
                                     </div>
                                 </div>
                                 <br>
-                                
+
                             </form>-->
 
-                            <form id="ticketForm">
+                            <form id="rentTicketForm">
                                 <div class="form-group">
                                     <div class="alert alert-danger" id="edit-error-msg" style="display: none;">
                                         错误信息展示栏。
                                     </div>
                                 </div>
-                                <input type="hidden" class="form-control" id="ticketId" name="ticketId">
+
+                                <input type="hidden" class="form-control" id="id" name="id">
                                 <!-- ticket 输入表单 -->
                                 <div class="form-group">
-                                    <label for="ticketFrom" class="control-label">出发地:</label>
-                                    <input type="text" class="form-control" id="ticketFrom" name="ticketFrom"
+                                    <label for="rentTicketFrom" class="control-label">出发地:</label>
+                                    <input type="text" class="form-control" id="rentTicketFrom" name="rentTicketFrom"
                                            placeholder="请输入出发地" required="true">
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="ticketTo" class="control-label">终点:</label>
-                                    <input type="text" class="form-control" id="ticketTo" name="ticketTo"
+                                    <label for="rentTicketTo" class="control-label">终点:</label>
+                                    <input type="text" class="form-control" id="rentTicketTo" name="rentTicketTo"
                                            placeholder="请输入终点" required="true">
                                 </div>
-                                <div class="form-group">
-                                    <label for="ticketPayer" class="control-label">购票人:</label>
-                                    <input type="text" class="form-control" id="ticketPayer" name="ticketPayer"
-                                           placeholder="请输入购票人" required="true">
-                                </div>
-                                <div class="form-group">
-                                    <label for="ticketCount" class="control-label">购票数:</label>
-                                    <input type="text" class="form-control" id="ticketCount" name="ticketCount"
-                                           placeholder="请输入购票数" required="true">
-                                </div>
+
 
                                 <div class="form-group">
                                     <label for="startTime" class="control-label">出发时间:</label>
@@ -109,6 +109,12 @@
                                     <label for="endTime" class="control-label">到达时间:</label>
                                     <input type="datetime-local" class="form-control" id="endTime" name="endTime"
                                            placeholder="请输入到达时间" required="true">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="rentTicketCount" class="control-label">余票数:</label>
+                                    <input type="text" class="form-control" id="rentTicketCount" name="rentTicketCount"
+                                           placeholder="请输入余票数" required="true">
                                 </div>
 
                             </form>
@@ -122,43 +128,29 @@
             </div>
             <!-- /.modal -->
         </div>
-
     </div>
     <!-- /.content-wrapper -->
     <!-- 引入页脚footer-fragment -->
     <div th:replace="admin/common/footer::footer-fragment"></div>
 </div>
+
+
 <!-- jQuery -->
 <script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
 <!-- Bootstrap 4 -->
 <script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
-<!-- Bootstrap 日期 -->
-<link th:href="@{/admin/plugins/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
-<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.min.js}"></script>
-<!-- <script th:src="@{moment.js}"></script> -->
-<!-- <script th:src="@{tempusdominus-bootstrap-4.min.js}"></script> -->
-
 <!-- AdminLTE App -->
 <script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
 <!-- jqgrid -->
 <script th:src="@{/admin/plugins/jqgrid-5.5.2/jquery.jqGrid.min.js}"></script>
 <script th:src="@{/admin/plugins/jqgrid-5.5.2/grid.locale-cn.js}"></script>
-<!-- image-picker -->
-<!-- <script th:src="@{/admin/plugins/image-picker/query.masonry.min.js}"></script>
-<script th:src="@{/admin/plugins/image-picker/image-picker.min.js}"></script> -->
 <!-- sweetalert -->
 <script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
 <script th:src="@{/admin/dist/js/public.js}"></script>
-<script th:src="@{/admin/dist/js/ticket.js}"></script>
+<script th:src="@{/admin/dist/js/rentTicket.js}"></script>
 
-
-<!-- <script type="text/javascript">
-    $(function () {
-        $('#datetimepicker1').datetimepicker();
-    });
-</script> -->
 
 </body>
 </html>

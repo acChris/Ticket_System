@@ -8,10 +8,12 @@
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="rent_ticket_count" jdbcType="INTEGER" property="rentTicketCount" />
+    <result column="rent_ticket_status" jdbcType="TINYINT" property="rentTicketStatus" />
     <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, rent_ticket_from, rent_ticket_to, start_time, end_time, rent_ticket_count, is_deleted
+    id, rent_ticket_from, rent_ticket_to, start_time, end_time, rent_ticket_count, rent_ticket_status, 
+    is_deleted
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -19,21 +21,30 @@
     from tb_rent_ticket
     where id = #{id,jdbcType=INTEGER}
   </select>
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_rent_ticket
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+  <update id="deleteBatch">
+    update tb_rent_ticket
+    SET is_deleted = 1
+    where id IN
+    <foreach item="id" collection="array" open="(" separator="," close=")">
+        #{id}
+    </foreach>
+  </update>
+
   <insert id="insert" parameterType="com.weng.ticket.entity.RentTicket">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into tb_rent_ticket (rent_ticket_from, rent_ticket_to, start_time, 
-      end_time, rent_ticket_count, is_deleted
-      )
+      end_time, rent_ticket_count, rent_ticket_status, 
+      is_deleted)
     values (#{rentTicketFrom,jdbcType=VARCHAR}, #{rentTicketTo,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{rentTicketCount,jdbcType=INTEGER}, #{isDeleted,jdbcType=TINYINT}
-      )
+      #{endTime,jdbcType=TIMESTAMP}, #{rentTicketCount,jdbcType=INTEGER}, #{rentTicketStatus,jdbcType=TINYINT}, 
+      #{isDeleted,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.weng.ticket.entity.RentTicket">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -56,6 +67,9 @@
       <if test="rentTicketCount != null">
         rent_ticket_count,
       </if>
+      <if test="rentTicketStatus != null">
+        rent_ticket_status,
+      </if>
       <if test="isDeleted != null">
         is_deleted,
       </if>
@@ -76,11 +90,129 @@
       <if test="rentTicketCount != null">
         #{rentTicketCount,jdbcType=INTEGER},
       </if>
+      <if test="rentTicketStatus != null">
+        #{rentTicketStatus,jdbcType=TINYINT},
+      </if>
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.weng.ticket.entity.RentTicket">
+    update tb_rent_ticket
+    <set>
+      <if test="rentTicketFrom != null">
+        rent_ticket_from = #{rentTicketFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="rentTicketTo != null">
+        rent_ticket_to = #{rentTicketTo,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rentTicketCount != null">
+        rent_ticket_count = #{rentTicketCount,jdbcType=INTEGER},
+      </if>
+      <if test="rentTicketStatus != null">
+        rent_ticket_status = #{rentTicketStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.weng.ticket.entity.RentTicket">
+    update tb_rent_ticket
+    <set>
+      <if test="rentTicketFrom != null">
+        rent_ticket_from = #{rentTicketFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="rentTicketTo != null">
+        rent_ticket_to = #{rentTicketTo,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rentTicketCount != null">
+        rent_ticket_count = #{rentTicketCount,jdbcType=INTEGER},
+      </if>
+      <if test="rentTicketStatus != null">
+        rent_ticket_status = #{rentTicketStatus,jdbcType=TINYINT},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="subRentTicket">
+    update tb_rent_ticket
+    SET rent_ticket_count = rent_ticket_count - 1
+    where
+    <if test="rentTicketFrom != null">
+      rent_ticket_from = #{rentTicketFrom,jdbcType=VARCHAR},
+    </if>
+    <if test="rentTicketTo != null">
+      rent_ticket_to = #{rentTicketTo,jdbcType=VARCHAR},
+    </if>
+    <if test="startTime != null">
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="endTime != null">
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="isDeleted != null">
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+    </if>
+  </update>
+
+
+  <select id="getRentTicketList" parameterType="Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_rent_ticket
+    where is_deleted = 0
+    <if test="keyword!=null">
+      AND (rent_ticket_from like CONCAT('%',#{keyword},'%' ) or rent_ticket_to like CONCAT('%',#{keyword},'%' ))
+    </if>
+    order by id desc
+    <if test="start!=null and limit!=null">
+      limit #{start},#{limit}
+    </if>
+
+  </select>
+
+  <select id="getTotalRentTickets" resultType="java.lang.Integer">
+    select count(*) from tb_rent_ticket
+    where is_deleted=0
+  </select>
+  <select id="selectByTicketFromOrTo" resultType="com.weng.ticket.entity.RentTicket">
+    select count(*) from tb_rent_ticket
+    where is_deleted=0
+    AND rent_ticket_status = 0
+    <if test="keyword!=null">
+      AND (rent_ticket_from like CONCAT('%',#{keyword},'%' )
+      or rent_ticket_to like CONCAT('%',#{keyword},'%' ))
+    </if>
+
+  </select>
+  <select id="selectByTicketFromOrToCount" resultType="java.lang.Integer">
+    select count(*) from tb_rent_ticket
+    where is_deleted=0
+    AND rent_ticket_status = 0
+    <if test="keyword!=null">
+      AND (rent_ticket_from like CONCAT('%',#{keyword},'%' )
+      or rent_ticket_to like CONCAT('%',#{keyword},'%' ))
+    </if>
+
+  </select>
 
   <insert id="saveRentTicket" parameterType="com.weng.ticket.entity.RentTicket">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -129,38 +261,4 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.weng.ticket.entity.RentTicket">
-    update tb_rent_ticket
-    <set>
-      <if test="rentTicketFrom != null">
-        rent_ticket_from = #{rentTicketFrom,jdbcType=VARCHAR},
-      </if>
-      <if test="rentTicketTo != null">
-        rent_ticket_to = #{rentTicketTo,jdbcType=VARCHAR},
-      </if>
-      <if test="startTime != null">
-        start_time = #{startTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endTime != null">
-        end_time = #{endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="rentTicketCount != null">
-        rent_ticket_count = #{rentTicketCount,jdbcType=INTEGER},
-      </if>
-      <if test="isDeleted != null">
-        is_deleted = #{isDeleted,jdbcType=TINYINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.weng.ticket.entity.RentTicket">
-    update tb_rent_ticket
-    set rent_ticket_from = #{rentTicketFrom,jdbcType=VARCHAR},
-      rent_ticket_to = #{rentTicketTo,jdbcType=VARCHAR},
-      start_time = #{startTime,jdbcType=TIMESTAMP},
-      end_time = #{endTime,jdbcType=TIMESTAMP},
-      rent_ticket_count = #{rentTicketCount,jdbcType=INTEGER},
-      is_deleted = #{isDeleted,jdbcType=TINYINT}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
 </mapper>

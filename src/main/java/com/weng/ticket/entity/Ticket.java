@@ -1,8 +1,12 @@
 package com.weng.ticket.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+
 import java.io.Serializable;
 import java.util.Date;
 
+@AllArgsConstructor
 public class Ticket implements Serializable {
     private Integer id;
 
@@ -14,12 +18,13 @@ public class Ticket implements Serializable {
 
     private Byte ticketCount;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startTime;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endTime;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date buyTime;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date payTime;
 
     private Byte ticketStatus;
@@ -27,7 +32,19 @@ public class Ticket implements Serializable {
     private Byte isDeleted;
 
     private static final long serialVersionUID = 1L;
-
+    
+    public Ticket(Integer ticketId, String ticketFrom, String ticketTo, String ticketPayer, Byte ticketCount, Date sTime, Date eTime, Byte ticketStatus) {
+        this.id = ticketId;
+        this.ticketFrom = ticketFrom;
+        this.ticketTo = ticketTo;
+        this.ticketPayer = ticketPayer;
+        this.ticketCount = ticketCount;
+        this.startTime = sTime;
+        this.endTime = eTime;
+        this.ticketStatus = ticketStatus;
+    }
+    
+    
     public Integer getId() {
         return id;
     }

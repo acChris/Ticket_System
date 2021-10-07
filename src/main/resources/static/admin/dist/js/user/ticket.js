@@ -1,6 +1,6 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: '/admin/ticket/list',
+        url: '/user/ticket/list',
         datatype: "json",
         colModel: [
             {label: 'id',      name: 'id',          index: 'id', width: 50, key: true, hidden: true},
@@ -68,7 +68,7 @@ $(function () {
             return "<button type=\"button\" class=\"btn btn-block btn-success btn-sm\" style=\"width: 80%;\">订票成功</button>";
         }
     }
-
+    
 });
 
 // function imgFormatter(cellvalue) {
@@ -85,14 +85,15 @@ function reload() {
     }).trigger("reloadGrid");
 }
 
-function ticketAdd() {
+/* function ticketAdd() {
     // reset();
     $('.modal-title').html('车票添加');
     $('#ticketModal').modal('show');
 }
+ */
 
 //绑定modal上的保存按钮
-$('#saveButton').click(function () {
+/* $('#saveButton').click(function () {
     var ticketId =      $('#ticketId').val();
     var ticketFrom =    $("#ticketFrom").val();
     var ticketTo =      $("#ticketTo").val();
@@ -199,7 +200,7 @@ function ticketDelete() {
             }
         }
     );
-}
+} */
 
 /**
  * 搜索功能
@@ -220,7 +221,7 @@ function ticketDelete() {
     //点击搜索按钮默认都从第一页开始
     $("#jqGrid").jqGrid("setGridParam", {page: 1});
     //提交post并刷新表格
-    $("#jqGrid").jqGrid("setGridParam", {url: '/admin/ticket/list'}).trigger("reloadGrid");
+    $("#jqGrid").jqGrid("setGridParam", {url: '/user/ticket/list'}).trigger("reloadGrid");
 }
 
 /* $('#datetimepicker1').datetimepicker({

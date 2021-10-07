@@ -1,23 +1,25 @@
 
 
 $('#addTicket').click(function () {
-    var rentTicket_from = $('#rentTicket_from').val();
-    var rentTicket_to = $('#rentTicket_to').val();
-    var rentTicket_count = $('#rentTicket_count').val();
+    var rentTicketFrom = $('#rentTicketFrom').val();
+    var rentTicketTo = $('#rentTicketTo').val();
+    var rentTicketCount = $('#rentTicketCount').val();
+    var startTime = $('#startTime').val();
+    var endTime = $('#endTime').val();
     // 判空
-    if (isNull(rentTicket_from)) {
+    if (isNull(rentTicketFrom)) {
         swal("请输入车票起点", {
             icon: "error",
         });
         return;
     }
-    if (isNull(rentTicket_to)) {
+    if (isNull(rentTicketTo)) {
         swal("请输入车票终点", {
             icon: "error",
         });
         return;
     }
-    if (isNull(rentTicket_count)) {
+    if (isNull(rentTicketCount)) {
         swal("请输入车票总数", {
             icon: "error",
         });
@@ -25,44 +27,55 @@ $('#addTicket').click(function () {
     }
 
     // 判长度
-    if (!validLength(rentTicket_from, 50)) {
+    if (!validCN_ENString2_18(rentTicketFrom) || !validLength(rentTicketFrom, 50)) {
         swal("起点名字过长", {
             icon: "error",
         });
         return;
     }
-    if (!validLength(rentTicket_to, 50)) {
+    if (!validCN_ENString2_18(rentTicketTo) || !validLength(rentTicketTo, 50)) {
         swal("终点名字过长", {
             icon: "error",
         });
         return;
     }
-    if (!validLength(rentTicket_count, 22)) {
+    if (!validCN_ENString2_18(rentTicketCount) || !validLength(rentTicketCount, 22)) {
         swal("车票总数过长", {
             icon: "error",
         });
         return;
     }
-    $('#articleModal').modal('show');
+    $('#addRentTicketModal').modal('show');
 });
 
 $('#saveButton').click(function () {
-    var url = '/admin/ticket/save';
+    // 输入数据
+    var rentTicketFrom = $('#rentTicketFrom').val();
+    var rentTicketTo = $('#rentTicketTo').val();
+    var rentTicketCount = $('#rentTicketCount').val();
+    var startTime = $('#startTime').val();
+    var endTime = $('#endTime').val();
+
+    var url = '/admin/rentTicket/save';
     var swlMessage = '保存成功';
     var data = {
-        "rentTicket_from": rentTicket_from,
-        "rentTicket_to": rentTicket_to,
-        "rentTicket_count": rentTicket_count
+        "rentTicketFrom": rentTicketFrom,
+        "rentTicketTo": rentTicketTo,
+        "startTime": startTime,
+        "endTime": endTime,
+        "rentTicketCount": rentTicketCount
     };
-    // if (blogId > 0) {
-    //     url = '/admin/ticket/update';
-    //     swlMessage = '修改成功';
-    //     data = {
-    //         "blogId": blogId,
-    //         "blogTitle": blogTitle,
-    //         "blogSubUrl": blogSubUrl
-    //     };
-    // }
+    /*var rentTicketId = getSelectedRow();
+    if (rentTicketId > 0) {
+        url = '/admin/ticket/update';
+        swlMessage = '修改成功';
+        data = {
+            "id": rentTicketId,
+            "rentTicketFrom": rentTicketFrom,
+            "rentTicketTo": rentTicketTo,
+            "rentTicketCount": rentTicketCount
+        };
+    }*/
     console.log(data);
     $.ajax({
         type: 'POST',//方法类型
@@ -70,8 +83,8 @@ $('#saveButton').click(function () {
         data: data,
         success: function (result) {
             if (result.resultCode === 200) {
-                $('#articleModal').modal('hide');
-                console.log('into success!')
+                $('#addRentTicketModal').modal('hide');
+                console.log('addRentTicket success on addRentTicket.js!')
                 swal({
                     title: swlMessage,
                     type: 'success',
@@ -81,11 +94,11 @@ $('#saveButton').click(function () {
                     confirmButtonClass: 'btn btn-success',
                     buttonsStyling: false
                 }).then(function () {
-                    window.location.href = "/admin/ticket";
+                    window.location.href = "/admin/rentTicket";
                 })
             }
             else {
-                $('#articleModal').modal('hide');
+                $('#addRentTicketModal').modal('hide');
                 swal(result.message, {
                     icon: "error",
                 });

@@ -1,13 +1,13 @@
-package com.weng.ticket.controller.admin;
+package com.weng.ticket.controller.user;
 
 import com.weng.ticket.entity.RentTicket;
 import com.weng.ticket.service.RentTicketService;
-
+import com.weng.ticket.service.TicketService;
 import com.weng.ticket.util.DateUtil;
 import com.weng.ticket.util.PageQueryUtil;
 import com.weng.ticket.util.Result;
 import com.weng.ticket.util.ResultGenerator;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,8 +24,8 @@ import java.util.Map;
  * @Description:
  */
 @Controller
-@RequestMapping("/admin/rentTicket")
-public class RentTicketController {
+@RequestMapping("/user/rentTicket")
+public class SearchRentTicketController {
 
     @Resource
     RentTicketService rentTicketService;
@@ -34,13 +33,13 @@ public class RentTicketController {
     @GetMapping("")
     public String ticket(HttpServletRequest request){
         request.setAttribute("path", "rentTicket");
-        return "admin/rentTicket";
+        return "user/rentTicket";
     }
 
 
     @GetMapping("/list")
     @ResponseBody
-    public Result list(@RequestParam Map<String, Object> params){
+    public Result list(HttpServletRequest request, @RequestParam Map<String, Object> params){
         // 判参数的 page 和 limit 是否为空
         if (StringUtils.isEmpty(params.get("page")) || StringUtils.isEmpty(params.get("limit"))){
             return ResultGenerator.genFailResult("参数异常！");
@@ -52,16 +51,34 @@ public class RentTicketController {
         }*/
 
         // 根据参数 map 分页查询
+        String loginUserName = request.getSession().getAttribute("loginUserName").toString();
+        params.put("loginUserName", loginUserName);
         PageQueryUtil pageUtil = new PageQueryUtil(params);
         return ResultGenerator.genSuccessResult(rentTicketService.getRentTicketPage(pageUtil));
     }
-
-    @GetMapping("/add")
-    public String edit(){
-        return "/admin/rentTicket/add";
+    
+    /**
+     * 用户订票
+     * @return
+     */
+    @PostMapping("/add")
+    @ResponseBody
+    public Result addTicket(@RequestParam("rentTicketId")    Integer rentTicketId,
+                            @RequestParam("rentTicketFrom")  String  rentTicketFrom,
+                            @RequestParam("rentTicketTo")    String  rentTicketTo,
+                            @RequestParam("startTime")       String  startTime,
+                            @RequestParam("endTime")         String endTime )throws ParseException {
+        Date sTime = DateUtil.StringToDate(startTime);
+        Date eTime = DateUtil.StringToDate(endTime);
+        RentTicket rentTicket = new RentTicket(rentTicketId, rentTicketFrom, rentTicketTo, sTime, eTime);
+        String result = rentTicketService.subRentTicket(rentTicket);
+        if ("SUCCESS".equals(result)){
+            return ResultGenerator.genSuccessResult("订票成功！");
+        }else{
+            return ResultGenerator.genFailResult("订票失败，请重试！");
+        }
     }
-
-
+    
     @PostMapping("/save")
     @ResponseBody
     public Result save(@RequestParam("id") Integer id,
@@ -87,51 +104,5 @@ public class RentTicketController {
         RentTicket rentTicket = rentTicketService.selectByPrimaryKey(rentTicketId);
         return ResultGenerator.genSuccessResult(rentTicket);
     }
-    
-    
-    @PostMapping("/delete")
-    @ResponseBody
-    public Result deleteRentTicket(@RequestBody Integer[] ids){
-        if (ids.length < 1){
-            return ResultGenerator.genFailResult("参数异常");
-        }
 
-        /*for (Integer i : ids){
-            System.out.print(i + "  ");
-        }
-        System.out.println();*/
-
-        Boolean isSuccess = rentTicketService.deleteBatch(ids);
-        if (isSuccess){
-            return ResultGenerator.genSuccessResult("删除成功!");
-        }else{
-            return ResultGenerator.genFailResult("删除失败！");
-        }
-    }
-    
-    
-    @PostMapping("/edit/{rentTicketId}")
-    @ResponseBody
-    public Result edit(@PathVariable("rentTicketId")    Integer rentTicketId,
-                       @RequestParam("rentTicketFrom")  String  rentTicketFrom,
-                       @RequestParam("rentTicketTo")    String  rentTicketTo,
-                       @RequestParam("startTime")       String  startTime,
-                       @RequestParam("endTime")         String endTime,
-                       @RequestParam("rentTicketCount") Integer rentTicketCount) throws ParseException {
-        // 将 Time 转为 Date 类型
-        Date sTime = DateUtil.StringToDate(startTime);
-        Date eTime = DateUtil.StringToDate(endTime);
-        
-        RentTicket rentTicket = new RentTicket(rentTicketId, rentTicketFrom, rentTicketTo, sTime, eTime, rentTicketCount);
-
-//        System.out.println("经过edit方法。。。");
-//        System.out.println(rentTicket);
-        
-        String saveRentTicketResult = rentTicketService.updateRentTicketById(rentTicket);
-        if ("SUCCESS".equals(saveRentTicketResult)) {
-            return ResultGenerator.genSuccessResult(rentTicket);
-        }else{
-            return ResultGenerator.genFailResult("修改余票失败，请重试！");
-        }
-    }
 }

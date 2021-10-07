@@ -33,10 +33,10 @@
         </jdbcConnection>
 
         <!--生成service,serviceImpl-->
-       <!-- <javaServiceGenerator targetPackage="com.shsoft.platform.service" targetProject="src/main/java"
+        <!--<javaServiceGenerator targetPackage="com.shsoft.platform.service" targetProject="src/main/java"
                               implementationPackage="com.shsoft.platform.service">
-        </javaServiceGenerator>
--->
+        </javaServiceGenerator>-->
+
         <!--生成controller-->
         <!--<javaControllerGenerator targetPackage="com.shsoft.platform.ctrl" targetProject="src/main/java">
             <property name="superClass" value="com.shsoft.platform.ctrl.BaseController"></property>
@@ -50,9 +50,9 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.weng.ticket.mapper"
                              targetProject="src/main/java"/>
         <!--生成全部表tableName设为%-->
-        <table tableName="tb_ticket" domainObjectName="Ticket" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+        <!--<table tableName="tb_ticket" domainObjectName="Ticket" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+        </table>-->
         <table tableName="tb_rent_ticket" domainObjectName="RentTicket" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>

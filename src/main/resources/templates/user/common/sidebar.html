@@ -24,39 +24,23 @@
                 data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
-                <li class="nav-header">Dashboard</li>
-                <li class="nav-item">
-                    <!-- th:class if path == curA then active -->
-                    <a th:href="@{/admin/index}" th:class="${path}=='index'?'nav-link active':'nav-link'">
-                        <i class="nav-icon fa fa-dashboard"></i>
-                        <p>
-                            Dashboard
-                        </p>
-                    </a>
-                </li>
+             <!--    <li class="nav-header">Dashboard</li> -->
                 
                 <li class="nav-header">管理模块</li>
                 <li class="nav-item">
-                    <a th:href="@{/admin/rentTicket}" th:class="${path}=='rentTicket'?'nav-link active':'nav-link'">
+                    <a th:href="@{/user/rentTicket}" th:class="${path}=='rentTicket'?'nav-link active':'nav-link'">
                         <i class="nav-icon fa fa fa-pencil-square-o"></i>
                         <p>
-                            火车余票管理
+                            查询火车
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a th:href="@{/admin/ticket}" th:class="${path}=='ticket'?'nav-link active':'nav-link'">
+                    <a th:href="@{/user/ticket}" th:class="${path}=='ticket'?'nav-link active':'nav-link'">
                         <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
                         <p>
-                            用户购票管理
+                            购票管理
                         </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/admin/profile}"
-                       th:class="${path}=='profile'?'nav-link active':'nav-link'">
-                        <i class="fa fa-user-secret nav-icon"></i>
-                        <p>修改密码</p>
                     </a>
                 </li>
                 <li class="nav-item">

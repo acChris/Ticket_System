@@ -1,11 +1,10 @@
 package com.weng.ticket.entity;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@AllArgsConstructor
 public class RentTicket implements Serializable {
     private Integer id;
 
@@ -13,18 +12,49 @@ public class RentTicket implements Serializable {
 
     private String rentTicketTo;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startTime;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endTime;
 
     private Integer rentTicketCount;
+
+    private Byte rentTicketStatus;
 
     private Byte isDeleted;
 
     private static final long serialVersionUID = 1L;
 
 
+    public RentTicket(Integer id, String rentTicketFrom, String rentTicketTo, Date startTime, Date endTime, Integer rentTicketCount, Byte rentTicketStatus, Byte isDeleted) {
+        this.id = id;
+        this.rentTicketFrom = rentTicketFrom;
+        this.rentTicketTo = rentTicketTo;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.rentTicketCount = rentTicketCount;
+        this.rentTicketStatus = rentTicketStatus;
+        this.isDeleted = isDeleted;
+    }
 
+    public RentTicket(Integer rentTicketId, String rentTicketFrom,
+                      String rentTicketTo, Date sTime, Date eTime, Integer rentTicketCount) {
+        this.id = rentTicketId;
+        this.rentTicketFrom = rentTicketFrom;
+        this.rentTicketTo = rentTicketTo;
+        this.startTime = sTime;
+        this.endTime = eTime;
+        this.rentTicketCount = rentTicketCount;
+    }
+    
+    public RentTicket(Integer rentTicketId, String rentTicketFrom, String rentTicketTo, Date sTime, Date eTime) {
+        this.id = rentTicketId;
+        this.rentTicketFrom = rentTicketFrom;
+        this.rentTicketTo = rentTicketTo;
+        this.startTime = sTime;
+        this.endTime = eTime;
+    }
+    
     public Integer getId() {
         return id;
     }
@@ -73,6 +103,14 @@ public class RentTicket implements Serializable {
         this.rentTicketCount = rentTicketCount;
     }
 
+    public Byte getRentTicketStatus() {
+        return rentTicketStatus;
+    }
+
+    public void setRentTicketStatus(Byte rentTicketStatus) {
+        this.rentTicketStatus = rentTicketStatus;
+    }
+
     public Byte getIsDeleted() {
         return isDeleted;
     }
@@ -93,9 +131,11 @@ public class RentTicket implements Serializable {
         sb.append(", startTime=").append(startTime);
         sb.append(", endTime=").append(endTime);
         sb.append(", rentTicketCount=").append(rentTicketCount);
+        sb.append(", rentTicketStatus=").append(rentTicketStatus);
         sb.append(", isDeleted=").append(isDeleted);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
     }
+
 }

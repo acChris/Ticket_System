@@ -183,10 +183,10 @@ function deleteLink() {
 }
 
 function reset() {
-    $("#linkName").val('');
-    $("#linkUrl").val('');
-    $("#linkDescription").val('');
-    $("#linkRank").val(0);
-    $('#edit-error-msg').css("display", "none");
-    $("#linkType option:first").prop("selected", 'selected');
+    $("#ticket_from").val('');
+    $("#ticket_to").val('');
+    $("#ticket_payer").val('');
+    $("#ticket_count").val(0);
+    $('#start_time').val('');
+    $("#end_time").val('');
 }

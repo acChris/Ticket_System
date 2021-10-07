@@ -1,6 +1,9 @@
 package com.weng.ticket.service;
 
 import com.weng.ticket.entity.RentTicket;
+import com.weng.ticket.util.PageQueryUtil;
+import com.weng.ticket.util.PageResult;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,4 +23,19 @@ public interface RentTicketService {
      * @return
      */
     RentTicket getRentTicketById(Integer id);
+
+    PageResult getRentTicketPage(PageQueryUtil pageUtil);
+
+    RentTicket selectByPrimaryKey(Integer rentTicketId);
+
+    String updateRentTicketById(RentTicket rentTicket);
+
+    Boolean deleteBatch(Integer[] ids);
+
+    PageResult selectByTicketFromOrTo(String keyword);
+
+    Integer selectByTicketFromOrToCount(String keyword);
+
+    String subRentTicket(@Param("rentTicket") RentTicket rentTicket);
+    
 }

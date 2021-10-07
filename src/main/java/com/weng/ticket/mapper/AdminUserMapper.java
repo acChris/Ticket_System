@@ -29,4 +29,5 @@ public interface AdminUserMapper {
     List<AdminUser> getAllAdminUsers();
 
     int deleteUserById(Integer adminUserId);
+
 }

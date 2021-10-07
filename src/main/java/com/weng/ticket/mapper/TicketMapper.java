@@ -1,11 +1,15 @@
 package com.weng.ticket.mapper;
 
+import com.weng.ticket.entity.RentTicket;
 import com.weng.ticket.entity.Ticket;
 import com.weng.ticket.util.PageQueryUtil;
 
 import java.util.List;
 
 public interface TicketMapper {
+
+    int deleteBatchByIds(Integer[] ids);
+    
     int deleteByPrimaryKey(Integer id);
 
     int insert(Ticket record);
@@ -21,4 +25,5 @@ public interface TicketMapper {
     List<Ticket> findTicketList(PageQueryUtil pageQueryUtil);
 
     int getTotalTickets(PageQueryUtil pageUtil);
+
 }

@@ -2,7 +2,8 @@ package com.weng.ticket.controller.admin;
 
 import com.weng.ticket.entity.AdminUser;
 import com.weng.ticket.service.*;
-import com.weng.ticket.util.GetSessionUtil;
+import com.weng.ticket.util.PageQueryUtil;
+import com.weng.ticket.util.ResultGenerator;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +33,8 @@ public class AdminController {
     *       2. 返回后台主页
     * */
 
-    @GetMapping({"", "/", "/index", "/admin/index", "/index.html"})
-    public String index(HttpServletRequest request) {
+    @GetMapping({"", "/", "/index", "admin", "/admin/index", "/index.html"})
+    public String indexloginUser(HttpServletRequest request) {
         request.setAttribute("path", "index");
         return "admin/index";
     }
@@ -57,6 +58,7 @@ public class AdminController {
                         @RequestParam("password") String password,
                         @RequestParam("verifyCode") String verifyCode,
                         HttpSession session) {
+        
         if (StringUtils.isEmpty(verifyCode)) {
             session.setAttribute("errorMsg", "验证码不能为空");
             return "admin/login";
@@ -71,15 +73,32 @@ public class AdminController {
             return "admin/login";
         }
         AdminUser adminUser = adminUserService.login(userName, password);
-        if (adminUser != null) {
+        
+     /*   System.out.println(adminUser.getLoginUserName().equals("root")
+                || adminUser.getLoginUserName().equals("admin"));*/
+        
+        if (adminUser != null && (adminUser.getLoginUserName().equals("root")
+                || adminUser.getLoginUserName().equals("admin"))) {
+            System.out.println("im in adminUser");
             session.setAttribute("loginUser", adminUser.getNickName());
             session.setAttribute("loginUserId", adminUser.getAdminUserId());
+            session.setAttribute("loginUserName", adminUser.getLoginUserName());
             //session过期时间设置为7200秒 即两小时
-            //session.setMaxInactiveInterval(60 * 60 * 2);
+            session.setMaxInactiveInterval(60 * 60 * 2);
             return "redirect:/admin/index";
-        } else {
-            session.setAttribute("errorMsg", "登陆失败");
-            return "admin/login";
+        } else{
+            if (adminUser != null){
+                // System.out.println("im in user");
+                session.setAttribute("loginUser", adminUser.getNickName());
+                session.setAttribute("loginUserId", adminUser.getAdminUserId());
+                session.setAttribute("loginUserName", adminUser.getLoginUserName());
+                //session过期时间设置为7200秒 即两小时
+                session.setMaxInactiveInterval(60 * 60 * 2);
+                return "/user/ticket";
+            }else{
+                session.setAttribute("errorMsg", "登陆失败");
+                return "admin/login";
+            }
         }
     }
 
@@ -98,11 +117,24 @@ public class AdminController {
 
     @GetMapping("/admin/profile")
     public String profile(HttpServletRequest request) {
-        if (GetSessionUtil.getSession(request)) return "admin/login";
+        Integer loginUserId = (Integer) request.getSession().getAttribute("loginUserId");
+        AdminUser adminUser = adminUserService.getUserDetailById(loginUserId);
+        if (adminUser == null) {
+            return "admin/login";
+        }
+        request.setAttribute("path", "profile");
+        request.setAttribute("loginUserName", adminUser.getLoginUserName());
+        request.setAttribute("nickName", adminUser.getNickName());
+        System.out.println("成功显示");
         return "admin/profile";
     }
 
-
+   /* @GetMapping("/admin/user")
+    public String users(HttpServletRequest request){
+        request.setAttribute("path", "user");
+        return "admin/users";
+    }*/
+    
     /*
     *   修改密码
     *
@@ -132,7 +164,9 @@ public class AdminController {
             return "修改失败";
         }
     }
-
+    
+    
+    
     /*
     *   修改基础信息
     *

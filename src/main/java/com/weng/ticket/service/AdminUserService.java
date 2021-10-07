@@ -7,7 +7,14 @@ import java.util.List;
 
 @Service
 public interface AdminUserService {
-
+    
+    /**
+     * 管理员登录
+     *
+     * @param userName
+     * @param password
+     * @return
+     */
     AdminUser login(String userName, String password);
 
     /**
@@ -53,4 +60,5 @@ public interface AdminUserService {
      * @param adminUserId
      */
     Boolean deleteUserById(Integer adminUserId);
+
 }
