@@ -157,19 +157,19 @@
     SET rent_ticket_count = rent_ticket_count - 1
     where
     <if test="rentTicketFrom != null">
-      rent_ticket_from = #{rentTicketFrom,jdbcType=VARCHAR},
+      rent_ticket_from = #{rentTicketFrom,jdbcType=VARCHAR}
     </if>
     <if test="rentTicketTo != null">
-      rent_ticket_to = #{rentTicketTo,jdbcType=VARCHAR},
+      AND rent_ticket_to = #{rentTicketTo,jdbcType=VARCHAR}
     </if>
     <if test="startTime != null">
-      start_time = #{startTime,jdbcType=TIMESTAMP},
+      AND start_time = #{startTime,jdbcType=TIMESTAMP}
     </if>
     <if test="endTime != null">
-      end_time = #{endTime,jdbcType=TIMESTAMP},
+      AND end_time = #{endTime,jdbcType=TIMESTAMP}
     </if>
     <if test="isDeleted != null">
-      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      AND is_deleted = #{isDeleted,jdbcType=TINYINT}
     </if>
   </update>
 

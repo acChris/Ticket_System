@@ -71,6 +71,8 @@ public class SearchRentTicketController {
         Date sTime = DateUtil.StringToDate(startTime);
         Date eTime = DateUtil.StringToDate(endTime);
         RentTicket rentTicket = new RentTicket(rentTicketId, rentTicketFrom, rentTicketTo, sTime, eTime);
+        System.out.println(sTime);
+        System.out.println(eTime);
         String result = rentTicketService.subRentTicket(rentTicket);
         if ("SUCCESS".equals(result)){
             return ResultGenerator.genSuccessResult("订票成功！");

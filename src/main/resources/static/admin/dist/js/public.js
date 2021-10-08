@@ -1,3 +1,17 @@
+/**
+ * yyyy-MM-dd HH:mm:ss --> yyyy-MM-ddTHH:mm'格式的字符串转日期
+ */
+function toPageDateTime(str){
+    return str.substr(0, 10) + 'T' + str.substr(11)
+}
+
+/**
+ * yyyy-MM-dd HH:mm:ss --> yyyy-MM-ddTHH:mm'格式的字符串转日期
+ */
+function toTotalDate(str){
+    return str.substr(0, 10) + ' ' + str.substr(11) + ':00'
+}
+
 // <!-- 正则验证 start-->
 /**
  * 判空
@@ -182,3 +196,4 @@ function getSelectedRows() {
     }
     return grid.getGridParam("selarrrow");
 }
+

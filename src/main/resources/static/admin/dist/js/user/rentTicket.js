@@ -88,30 +88,43 @@ function reload() {
 function orderTicket() {
     $('.modal-title').html('订票信息');
     $('#rentTicketModal').modal('show');
-    
+
     var id = getSelectedRow();
-    
+
     // 向后端发出 GET 请求，根据 id 获取数据
     $.get("/user/rentTicket/edit/" + id, function (r) {
         if (r.resultCode == 200 && r.data != null) {
+            // 转换日期
+            // var sTime = stringToDate(r.data.startTime);
+            // var eTime = stringToDate(r.data.endTime);
+            // console.log(r.data.startTime.sub(0, r.data.startTime.length - 3));
+            // console.log("sTime" + sTime);
+            // console.log("eTime" + eTime);
+            // console.log(r.data.startTime.sub());
+            // console.log(r.data.endTime);
+            var sTime = toPageDateTime(r.data.startTime);
+            var eTime = toPageDateTime(r.data.endTime);
+
             //填充数据至modal
-            $("#id").val(r.data.id);
+            $("#id").val(id);
             $("#rentTicketFrom").val(r.data.rentTicketFrom);
             $("#rentTicketTo").val(r.data.rentTicketTo);
-            $("#startTime").val(r.data.startTime);
-            $("#endTime").val(r.data.endTime);
+            $("#startTime").val(sTime);
+            $("#endTime").val(eTime);
         }
     });
     // window.location.href = "";
 }
 
+
 function saveButton() {
     var id =                getSelectedRow();
     var rentTicketFrom  = $('#rentTicketFrom').val();
     var rentTicketTo    = $('#rentTicketTo').val();
-    var startTime       = $('#startTime').val();
-    var endTime         = $('#endTime').val();
+    var startTime       = toTotalDate($('#startTime').val());
+    var endTime         = toTotalDate($('#endTime').val());
 
+    console.log(startTime + "  " + endTime);
     if (id == null) {
         return;
     }
@@ -127,7 +140,7 @@ function saveButton() {
         url: '/user/rentTicket/add',
         data: params,
         success: function (result) {
-            if (result.resultCode == 200) {
+            if (result.resultCode === 200) {
                 $('#rentTicketModal').modal('hide');
                 swal("保存成功", {
                     icon: "success",

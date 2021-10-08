@@ -15,7 +15,9 @@ public class DateUtil {
      * 2021-10-05T15:53 => 2021-10-05 15:53:00
      */
     public static Date StringToDate(String inputDate) throws ParseException {
-        inputDate = inputDate.replace("T", " ") + ":00";
+        if (inputDate.contains("T")){
+            inputDate = inputDate.replace("T", " ") + ":00";
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date parseDate = sdf.parse(inputDate);
         System.out.println(parseDate);
