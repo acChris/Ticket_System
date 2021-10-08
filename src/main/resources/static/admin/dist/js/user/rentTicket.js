@@ -94,7 +94,6 @@ function orderTicket() {
     // 向后端发出 GET 请求，根据 id 获取数据
     $.get("/user/rentTicket/edit/" + id, function (r) {
         if (r.resultCode == 200 && r.data != null) {
-            // 转换日期
             // var sTime = stringToDate(r.data.startTime);
             // var eTime = stringToDate(r.data.endTime);
             // console.log(r.data.startTime.sub(0, r.data.startTime.length - 3));
@@ -102,6 +101,7 @@ function orderTicket() {
             // console.log("eTime" + eTime);
             // console.log(r.data.startTime.sub());
             // console.log(r.data.endTime);
+            // 转换日期
             var sTime = toPageDateTime(r.data.startTime);
             var eTime = toPageDateTime(r.data.endTime);
 

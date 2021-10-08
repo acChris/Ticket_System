@@ -165,16 +165,22 @@ function ticketEdit() {
     $('#ticketModal').modal('show');
 
 
+
     $.get("/admin/ticket/edit/" + ticketId, function (r) {
         if (r.resultCode == 200 && r.data != null) {
+
+            //日期转换
+            var sTime = toPageDateTime(r.data.startTime);
+            var eTime = toPageDateTime(r.data.endTime);
+
             //填充数据至modal
             $("#ticketId").val(r.data.id);
             $("#ticketFrom").val(r.data.ticketFrom);
             $("#ticketTo").val(r.data.ticketTo);
             $("#ticketPayer").val(r.data.ticketPayer);
-            $("#ticketCount").val(r.data.ticketFrom.ticketCount);
-            $("#startTime").val(r.data.ticketFrom.startTime);
-            $("#endTime").val(r.data.ticketFrom.endTime);
+            $("#ticketCount").val(r.data.ticketCount);
+            $("#startTime").val(sTime);
+            $("#endTime").val(eTime);
         }
     });
 }

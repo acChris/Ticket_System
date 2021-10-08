@@ -97,18 +97,24 @@ function editTicket() {
     }
     // window.location.href = "/admin/rentTicket/edit/" + rentTicketId;
     
-    // $('.modal-title').html('友链修改');
+    $('.modal-title').html('编辑车票');
     $('#rentTicketModal').modal('show');
 
     // 向后端发出 GET 请求，根据 id 获取数据
     $.get("/admin/rentTicket/edit/" + id, function (r) {
         if (r.resultCode == 200 && r.data != null) {
             //填充数据至modal
-            $("#id").val(r.data.id);
+
+            // 转换日期
+            var sTime = toPageDateTime(r.data.startTime);
+            var eTime = toPageDateTime(r.data.endTime);
+
+            //填充数据至modal
+            $("#id").val(id);
             $("#rentTicketFrom").val(r.data.rentTicketFrom);
             $("#rentTicketTo").val(r.data.rentTicketTo);
-            $("#startTime").val(r.data.startTime);
-            $("#endTime").val(r.data.endTime);
+            $("#startTime").val(sTime);
+            $("#endTime").val(eTime);
             $("#rentTicketCount").val(r.data.rentTicketCount);
         }
     });
