@@ -20,7 +20,12 @@ public class DateUtil {
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date parseDate = sdf.parse(inputDate);
-        System.out.println(parseDate);
+//        System.out.println(parseDate);
         return parseDate;
+    }
+
+    public void toS() {
+        System.out.println("this is branch test-Pull!");
+        System.out.println("test for branch a pull b");
     }
 }
