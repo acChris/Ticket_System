@@ -20,7 +20,9 @@ public class DateUtil {
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date parseDate = sdf.parse(inputDate);
+//        dev branch
         System.out.println(parseDate);
         return parseDate;
     }
+
 }
